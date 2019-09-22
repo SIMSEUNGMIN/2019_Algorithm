@@ -37,12 +37,15 @@ public class Main {
 	
 	public static void insertionSort(String[] array) {
 		
+		//두번 쨰 원소부터 반복문을 돈다
 		for(int cur = 1; cur < array.length; cur++) {
 			
 			int key = Integer.parseInt(array[cur]);
 			
+			//현재 cur의 원소 이전원소를 전부 돌면서 적절한 위치를 찾는다
 			for(int pre = cur-1; pre >= 0; pre--) {
 				
+				//cur의 원소보다 큰 경우 위치를 변경한다
 				if(Integer.parseInt(array[pre]) > key) {
 					array[pre + 1] = array[pre];
 					array[pre] = Integer.toString(key);

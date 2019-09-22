@@ -4,7 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class Main {
+public class InsertionSort {
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 		// TODO Auto-generated method stub

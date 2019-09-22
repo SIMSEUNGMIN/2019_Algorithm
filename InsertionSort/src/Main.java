@@ -1,30 +1,51 @@
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Arrays;
 
 public class Main {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException, IOException {
 		// TODO Auto-generated method stub
 		
-		int[] array = {5, 4, 3, 56, 45, 34, 2, 32, 22, 21, 67, 56};
+		String input = "";
 		
+		//읽어올 파일 경로
+		String filePath = "C:/Users/user/Desktop/data02.txt";
+		
+		//파일에서 읽어옴
+		try(FileInputStream fStream = new FileInputStream(filePath);){
+			byte[] readByte = new byte[fStream.available()];
+			while(fStream.read(readByte) != -1);
+			fStream.close();
+			input = new String(readByte);
+		}
+		
+		//읽어온 값 배열로 만듦
+		String[] array = input.split(",");
+		
+		//Sort 실행
 		insertionSort(array);
 		
-		System.out.println(Arrays.toString(array));
-		
-
+		//파일에 씀
+		try(FileWriter fw = new FileWriter("result.txt")){
+			fw.write(Arrays.toString(array));
+		}
+				
 	}
 	
-	public static void insertionSort(int[] array) {
+	public static void insertionSort(String[] array) {
 		
 		for(int cur = 1; cur < array.length; cur++) {
 			
-			int key = array[cur];
+			int key = Integer.parseInt(array[cur]);
 			
 			for(int pre = cur-1; pre >= 0; pre--) {
 				
-				if(array[pre] > key) {
+				if(Integer.parseInt(array[pre]) > key) {
 					array[pre + 1] = array[pre];
-					array[pre] = key;
+					array[pre] = Integer.toString(key);
 				}
 			}
 		}

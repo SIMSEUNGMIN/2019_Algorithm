@@ -29,7 +29,7 @@ public class Main {
 		insertionSort(array);
 		
 		//ÆÄÀÏ¿¡ ¾¸
-		try(FileWriter fw = new FileWriter("result.txt")){
+		try(FileWriter fw = new FileWriter("result_InsertionSort.txt")){
 			fw.write(Arrays.toString(array));
 		}
 				

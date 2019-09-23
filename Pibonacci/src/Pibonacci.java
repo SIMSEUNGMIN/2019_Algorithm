@@ -60,7 +60,7 @@ public class Pibonacci {
 						System.out.println("-------------------------------------------------------");
 
 					long start = System.nanoTime();
-					result_recursive_squaring = pibonacci_recursive_squaring(input);
+					result_recursive_squaring = pibonacci_recursive_squaring(i);
 					long end = System.nanoTime();
 					System.out.print("f(" + i + ") = "+ result_recursive_squaring + "                       ");
 					System.out.format("%.9f sec\n", ((end-start)/1000000000.0));
@@ -110,13 +110,38 @@ public class Pibonacci {
 
 	private static long pibonacci_recursive_squaring(int input) {
 		
-		int[][] mul = {{1, 1},
-						{1, 0}};
+		long[][] A = {{1,1}, {1,0}};
 		
-		
-		
-		return 0;
+		if (input < 2) {
+			return input;
+		}
+		else {
+			return pow(A,input-1)[0][0];
+		}
 	}
 
+	private static long[][] pow(long[][] a, int input) {
+		if(input == 1) return a;
+		
+		if(input % 2 == 0) { //Â¦¼öÀÏ ¶§
+			return mul(pow(a, input/2) , pow(a, input/2));
+		}
+		else { //È¦¼öÀÏ ¶§
+			return mul( mul(pow(a, (input-1)/2), pow(a, (input-1)/2)), a);
+		}
+	}
+
+	private static long[][] mul(long[][] a, long[][] b) {
+		
+		long[][] result = new long[2][2];
+		
+		result[0][0] = (a[0][0] * b[0][0]) + (a[0][1] * b[1][0]);
+		result[0][1] = (a[0][0] * b[0][1]) + (a[0][1] * b[1][1]);
+		result[1][0] = (a[1][0] * b[0][0]) + (a[1][1] * b[1][0]);
+		result[1][1] = (a[1][0] * b[0][1]) + (a[1][1] * b[1][1]);
+		
+		return result;
+		
+	}
 
 }

@@ -13,7 +13,7 @@ public class Pibonacci {
 		
 		System.out.print("1. Recursion\n" 
 				+ "2. Bottom-up\n" 
-				+ "3.Recursive Squaring\n"
+				+ "3. Recursive Squaring\n"
 				+ "어떤 방법을 사용하시겠습니까?(종료하려면 목록을 제외한 번호를 입력하세요) ");
 		
 		int menu = scanner.nextInt();
@@ -158,6 +158,7 @@ public class Pibonacci {
 		
 		long[][] result = new long[2][2];
 		
+		//행렬 4개 원소의 값을 더하여 행렬에 넣어준 다음 반환한다
 		result[0][0] = (a[0][0] * b[0][0]) + (a[0][1] * b[1][0]);
 		result[0][1] = (a[0][0] * b[0][1]) + (a[0][1] * b[1][1]);
 		result[1][0] = (a[1][0] * b[0][0]) + (a[1][1] * b[1][0]);

@@ -43,8 +43,8 @@ public class Inversion {
 		else {
 			int mid = (start + end) / 2;
 			
-			return divideInversion(array, start, mid)
-			+ divideInversion(array, mid+1, end)
+			return inversion(array, start, mid)
+			+ inversion(array, mid+1, end)
 			+ mergeInversion(array, start, mid, end);
 		}
 	}

@@ -34,11 +34,14 @@ public class Closest {
 		}
 		
 		//X좌표 기준으로 오름차순 정렬
-		XSort(array);
+		xSort(array);
+		
+		//정렬된 array로 Closest_pair구함
+		
 		
 	}
 
-	private static void XSort(List<Point> array) {
+	private static void xSort(List<Point> array) {
 		
 		//두번째부터 시작
 		for(int cur = 1; cur < array.size(); cur++) {

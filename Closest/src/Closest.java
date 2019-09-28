@@ -41,33 +41,33 @@ public class Closest {
 		
 	}
 
-	private static float closestPair(List<Point> array) {
+	private static double closestPair(List<Point> array) {
 		
 		if(array.size() <= 3) {
 			
 			switch(array.size()) {
 				case 2:
 					//두 점 사이가 가장 최솟값
-					return (float) Math.sqrt(Math.pow((double)(array.get(0).getX() - array.get(1).getX()), 2) 
-							+ Math.pow((double)(array.get(0).getY() - array.get(1).getY()), 2));
+					return Math.sqrt(Math.pow((array.get(0).getX() - array.get(1).getX()), 2) 
+							+ Math.pow((array.get(0).getY() - array.get(1).getY()), 2));
 				case 3:
-					float[] tmpDistance = new float[array.size()];
+					double[] tmpDistance = new double[array.size()];
 					Point array0 = array.get(0);
 					Point array1 = array.get(1);
 					Point array2 = array.get(2);
 					
-					float minValue;
+					double minValue;
 					
 					//점들 사이의 거리
 					//0번 째 값과 1번 쨰 값
-					tmpDistance[0] = (float) Math.sqrt(Math.pow((double)(array0.getX() - array1.getX()), 2) 
-							+ Math.pow((double)(array0.getY() - array0.getY()), 2));
+					tmpDistance[0] = Math.sqrt(Math.pow((array0.getX() - array1.getX()), 2) 
+							+ Math.pow((array0.getY() - array0.getY()), 2));
 					//1번 째 값과 2번 째 값
-					tmpDistance[1] = (float) Math.sqrt(Math.pow((double)(array1.getX() - array2.getX()), 2) 
-							+ Math.pow((double)(array1.getY() - array2.getY()), 2));
+					tmpDistance[1] = Math.sqrt(Math.pow((array1.getX() - array2.getX()), 2) 
+							+ Math.pow((array1.getY() - array2.getY()), 2));
 					//2번 째 값과 0번 쨰 값
-					tmpDistance[2] = (float) Math.sqrt(Math.pow((double)(array2.getX() - array0.getX()), 2) 
-							+ Math.pow((double)(array2.getY() - array0.getY()), 2));
+					tmpDistance[2] = Math.sqrt(Math.pow((array2.getX() - array0.getX()), 2) 
+							+ Math.pow((array2.getY() - array0.getY()), 2));
 					
 					//거리들 중 최솟값을 구해서 return
 					minValue = tmpDistance[0];
@@ -122,27 +122,27 @@ public class Closest {
 }
 
 class Point{
-	private float x;
-	private float y;
+	private double x;
+	private double y;
 	
-	public Point(float newX, float newY) {
+	public Point(double newX, double newY) {
 		this.x = newX;
 		this.y = newY;
 	}
 	
-	public void setX(float givenX) {
+	public void setX(double givenX) {
 		this.x = givenX;
 	}
 	
-	public void setY(float givenY) {
+	public void setY(double givenY) {
 		this.y = givenY;
 	}
 	
-	public float getX() {
+	public double getX() {
 		return this.x;
 	}
 	
-	public float getY() {
+	public double getY() {
 		return this.y;
 	}
 }

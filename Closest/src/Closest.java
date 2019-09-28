@@ -24,50 +24,48 @@ public class Closest {
 		//읽어온 값으로 배열을 만듦(\n기준)
 		String[] inputArray = input.split("\n");
 		
-		//포인터를 저장할 List선언
-		List<Point> array = new ArrayList<>();
+		//포인트들을 저장할 포인트의 배열 선언
+		Point[] array = new Point[inputArray.length];
 		
 		//좌표값이 들어간 array
 		for(int i = 0; i < inputArray.length; i++) {
 			String[] tmp = inputArray[i].split(",");
-			array.add(new Point(Float.parseFloat(tmp[0]), Float.parseFloat(tmp[1])));
+			array[i] = new Point(Double.parseDouble(tmp[0]), Double.parseDouble(tmp[1]));
 		}
 		
 		//X좌표 기준으로 오름차순 정렬
 		xSort(array);
+		
+		//System.out.println(array[0].getX() + ", " + array[1].getX()  + ", " + array[2].getX()  + ", " + array[3].getX());
 		
 		//정렬된 array로 Closest_pair구한 결과 출력
 		System.out.println(closestPair(array));
 		
 	}
 
-	private static double closestPair(List<Point> array) {
+	private static double closestPair(Point[] array) {
 		
-		if(array.size() <= 3) {
+		if(array.length <= 3) {
 			
-			switch(array.size()) {
+			switch(array.length) {
 				case 2:
 					//두 점 사이가 가장 최솟값
-					return Math.sqrt(Math.pow((array.get(0).getX() - array.get(1).getX()), 2) 
-							+ Math.pow((array.get(0).getY() - array.get(1).getY()), 2));
+					return Math.sqrt(Math.pow((array[0].getX() - array[1].getX()), 2) 
+							+ Math.pow((array[0].getY() - array[1].getY()), 2));
 				case 3:
-					double[] tmpDistance = new double[array.size()];
-					Point array0 = array.get(0);
-					Point array1 = array.get(1);
-					Point array2 = array.get(2);
-					
+					double[] tmpDistance = new double[array.length];
 					double minValue;
 					
 					//점들 사이의 거리
 					//0번 째 값과 1번 쨰 값
-					tmpDistance[0] = Math.sqrt(Math.pow((array0.getX() - array1.getX()), 2) 
-							+ Math.pow((array0.getY() - array0.getY()), 2));
+					tmpDistance[0] = Math.sqrt(Math.pow((array[0].getX() - array[1].getX()), 2) 
+							+ Math.pow((array[0].getY() - array[1].getY()), 2));
 					//1번 째 값과 2번 째 값
-					tmpDistance[1] = Math.sqrt(Math.pow((array1.getX() - array2.getX()), 2) 
-							+ Math.pow((array1.getY() - array2.getY()), 2));
+					tmpDistance[1] = Math.sqrt(Math.pow((array[1].getX() - array[2].getX()), 2) 
+							+ Math.pow((array[1].getY() - array[2].getY()), 2));
 					//2번 째 값과 0번 쨰 값
-					tmpDistance[2] = Math.sqrt(Math.pow((array2.getX() - array0.getX()), 2) 
-							+ Math.pow((array2.getY() - array0.getY()), 2));
+					tmpDistance[2] = Math.sqrt(Math.pow((array[2].getX() - array[0].getX()), 2) 
+							+ Math.pow((array[2].getY() - array[0].getY()), 2));
 					
 					//거리들 중 최솟값을 구해서 return
 					minValue = tmpDistance[0];
@@ -102,18 +100,18 @@ public class Closest {
 //		return right;
 //	}
 
-	private static void xSort(List<Point> array) {
+	private static void xSort(Point[] array) {
 		//두번째부터 시작
-		for(int cur = 1; cur < array.size(); cur++) {
-			Point curKey = array.get(cur);
+		for(int cur = 1; cur < array.length; cur++) {
+			Point curKey = array[cur];
 			
 			//현재 cur의 원소 이전 원소를 전부 돌면서 적절한 위치를 찾음
 			for(int pre = cur-1; pre >= 0; pre--) {
 				
 				//cur의 원소보다 pre의 원소가 큰 경우 위치 변경
-				if(array.get(pre).getX() > curKey.getX()) {
-					array.set(pre+1, array.get(pre));
-					array.set(pre, curKey);
+				if(array[pre].getX() > curKey.getX()) {
+					array[pre+1] = array[pre];
+					array[pre] = curKey;
 				}
 			}
 		}	

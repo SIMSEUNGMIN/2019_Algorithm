@@ -83,22 +83,22 @@ public class Closest {
 		}
 		//점의 개수가 4개 이상일 때
 		else {
-//			List<Point> left = array.add
-//			List<Point> right = Arrays.;
-//			return min();
+			//배열을 반으로 쪼개서 왼쪽과 오른쪽으로 나눈 뒤
+			//왼쪽과 오른쪽에서 각각 나온 최솟값 중에서 더 작은 값을 반환함
+			Point[] left = Arrays.copyOfRange(array, 0, array.length/2);
+			Point[] right = Arrays.copyOfRange(array, array.length/2, array.length);
+			return min(closestPair(left), closestPair(right));
 		}
-		
-		return 0;
 	}
 
-	//최솟값을 구하는 함수
-//	private static float min(float left, float right) {
-//		if(left <= right) {
-//			return left;
-//		}
-//		
-//		return right;
-//	}
+	//두 점 중 더 작은 값을 구하는 함수
+	private static double min(double left, double right) {
+		if(left <= right) {
+			return left;
+		}
+		
+		return right;
+	}
 
 	private static void xSort(Point[] array) {
 		//두번째부터 시작

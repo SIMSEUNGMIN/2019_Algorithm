@@ -1,9 +1,7 @@
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class Closest {
 	
@@ -96,8 +94,6 @@ public class Closest {
 			Point[] left = Arrays.copyOfRange(array, 0, array.length/2);
 			Point[] right = Arrays.copyOfRange(array, array.length/2, array.length);
 			min = min(closestPair(left), closestPair(right));
-			
-			System.out.println("min " + min);
 		}
 		
 		count = 0;
@@ -114,10 +110,6 @@ public class Closest {
 		//arrayForY만 가지고 sorting
 		ySort(arrayForY);
 	
-		for(int i = 0; i < arrayForY.length; i++) {
-			System.out.println(arrayForY[i].getY());
-		}
-		
 		count = 0;
 		
 		//window 내부의 최단 거리를 구함

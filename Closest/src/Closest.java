@@ -1,7 +1,8 @@
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Closest {
@@ -24,13 +25,36 @@ public class Closest {
 		String[] inputArray = input.split("\n");
 		
 		//포인터를 저장할 List선언
-		List<Point> array = new LinkedList<>();
+		List<Point> array = new ArrayList<>();
 		
 		//좌표값이 들어간 array
 		for(int i = 0; i < inputArray.length; i++) {
 			String[] tmp = inputArray[i].split(",");
 			array.add(new Point(Float.parseFloat(tmp[0]), Float.parseFloat(tmp[1])));
 		}
+		
+		//X좌표 기준으로 오름차순 정렬
+		XSort(array);
+		
+	}
+
+	private static void XSort(List<Point> array) {
+		
+		//두번째부터 시작
+		for(int cur = 1; cur < array.size(); cur++) {
+			Point curKey = array.get(cur);
+			
+			//현재 cur의 원소 이전 원소를 전부 돌면서 적절한 위치를 찾음
+			for(int pre = cur-1; pre >= 0; pre--) {
+				
+				//cur의 원소보다 pre의 원소가 큰 경우 위치 변경
+				if(array.get(pre).getX() > curKey.getX()) {
+					array.set(pre+1, array.get(pre));
+					array.set(pre, curKey);
+				}
+			}
+		}
+		
 	}
 
 }

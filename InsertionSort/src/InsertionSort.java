@@ -7,7 +7,6 @@ import java.util.Arrays;
 public class InsertionSort {
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
-		// TODO Auto-generated method stub
 		
 		String input = "";
 		

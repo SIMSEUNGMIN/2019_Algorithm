@@ -36,8 +36,6 @@ public class Closest {
 		//X좌표 기준으로 오름차순 정렬
 		xSort(array);
 		
-		//System.out.println(array[0].getX() + ", " + array[1].getX()  + ", " + array[2].getX()  + ", " + array[3].getX());
-		
 		//정렬된 array로 Closest_pair구한 결과 출력
 		System.out.printf("결과 : %.3f",closestPair(array));
 	}

@@ -36,13 +36,73 @@ public class Closest {
 		//X좌표 기준으로 오름차순 정렬
 		xSort(array);
 		
-		//정렬된 array로 Closest_pair구함
-		
+		//정렬된 array로 Closest_pair구한 결과 출력
+		System.out.println(closestPair(array));
 		
 	}
 
-	private static void xSort(List<Point> array) {
+	private static float closestPair(List<Point> array) {
 		
+		if(array.size() <= 3) {
+			
+			switch(array.size()) {
+				case 2:
+					//두 점 사이가 가장 최솟값
+					return (float) Math.sqrt(Math.pow((double)(array.get(0).getX() - array.get(1).getX()), 2) 
+							+ Math.pow((double)(array.get(0).getY() - array.get(1).getY()), 2));
+				case 3:
+					float[] tmpDistance = new float[array.size()];
+					Point array0 = array.get(0);
+					Point array1 = array.get(1);
+					Point array2 = array.get(2);
+					
+					float minValue;
+					
+					//점들 사이의 거리
+					//0번 째 값과 1번 쨰 값
+					tmpDistance[0] = (float) Math.sqrt(Math.pow((double)(array0.getX() - array1.getX()), 2) 
+							+ Math.pow((double)(array0.getY() - array0.getY()), 2));
+					//1번 째 값과 2번 째 값
+					tmpDistance[1] = (float) Math.sqrt(Math.pow((double)(array1.getX() - array2.getX()), 2) 
+							+ Math.pow((double)(array1.getY() - array2.getY()), 2));
+					//2번 째 값과 0번 쨰 값
+					tmpDistance[2] = (float) Math.sqrt(Math.pow((double)(array2.getX() - array0.getX()), 2) 
+							+ Math.pow((double)(array2.getY() - array0.getY()), 2));
+					
+					//거리들 중 최솟값을 구해서 return
+					minValue = tmpDistance[0];
+					
+					for(int i = 1; i < tmpDistance.length; i++) {
+						if(tmpDistance[i] < minValue) {
+							minValue = tmpDistance[i];
+						}
+					}
+					
+					return minValue;
+				default:
+					return 0;	
+			}
+		}
+		//점의 개수가 4개 이상일 때
+		else {
+//			List<Point> left = array.add
+//			List<Point> right = Arrays.;
+//			return min();
+		}
+		
+		return 0;
+	}
+
+	//최솟값을 구하는 함수
+//	private static float min(float left, float right) {
+//		if(left <= right) {
+//			return left;
+//		}
+//		
+//		return right;
+//	}
+
+	private static void xSort(List<Point> array) {
 		//두번째부터 시작
 		for(int cur = 1; cur < array.size(); cur++) {
 			Point curKey = array.get(cur);
@@ -56,8 +116,7 @@ public class Closest {
 					array.set(pre, curKey);
 				}
 			}
-		}
-		
+		}	
 	}
 
 }

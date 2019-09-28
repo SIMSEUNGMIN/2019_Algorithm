@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Closest {
+	
+	static double min = 0;
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 		// TODO Auto-generated method stub
@@ -39,22 +41,29 @@ public class Closest {
 		//System.out.println(array[0].getX() + ", " + array[1].getX()  + ", " + array[2].getX()  + ", " + array[3].getX());
 		
 		//정렬된 array로 Closest_pair구한 결과 출력
-		System.out.println(closestPair(array));
-		
+		System.out.printf("결과 : %.3f",closestPair(array));
 	}
 
 	private static double closestPair(Point[] array) {
+		
+		Point[] tmpArray = new Point[array.length];
+		Point[] arrayForY;
+		double[] tmpDistance;
+		double[] realDistance;
+		
+		int count = 0;
 		
 		if(array.length <= 3) {
 			
 			switch(array.length) {
 				case 2:
 					//두 점 사이가 가장 최솟값
-					return Math.sqrt(Math.pow((array[0].getX() - array[1].getX()), 2) 
+					min = Math.sqrt(Math.pow((array[0].getX() - array[1].getX()), 2) 
 							+ Math.pow((array[0].getY() - array[1].getY()), 2));
+					
+					return min;
 				case 3:
-					double[] tmpDistance = new double[array.length];
-					double minValue;
+					tmpDistance = new double[array.length];
 					
 					//점들 사이의 거리
 					//0번 째 값과 1번 쨰 값
@@ -68,17 +77,16 @@ public class Closest {
 							+ Math.pow((array[2].getY() - array[0].getY()), 2));
 					
 					//거리들 중 최솟값을 구해서 return
-					minValue = tmpDistance[0];
+					min = tmpDistance[0];
 					
 					for(int i = 1; i < tmpDistance.length; i++) {
-						if(tmpDistance[i] < minValue) {
-							minValue = tmpDistance[i];
+						if(tmpDistance[i] < min) {
+							min = tmpDistance[i];
 						}
 					}
-					
-					return minValue;
+					return min;
 				default:
-					return 0;	
+					return min;
 			}
 		}
 		//점의 개수가 4개 이상일 때
@@ -87,8 +95,50 @@ public class Closest {
 			//왼쪽과 오른쪽에서 각각 나온 최솟값 중에서 더 작은 값을 반환함
 			Point[] left = Arrays.copyOfRange(array, 0, array.length/2);
 			Point[] right = Arrays.copyOfRange(array, array.length/2, array.length);
-			return min(closestPair(left), closestPair(right));
+			min = min(closestPair(left), closestPair(right));
+			
+			System.out.println("min " + min);
 		}
+		
+		count = 0;
+		
+		//구하고 나서 최솟값보다 작은 점들을 배열에서 제외
+		for(int i = 0; i < array.length; i++) {
+			if((array.length/2 - min) < array[i].getX()) {
+				tmpArray[count++] = array[i];
+			}
+		}
+		
+		arrayForY = Arrays.copyOfRange(tmpArray, 0, count);
+		
+		//arrayForY만 가지고 sorting
+		ySort(arrayForY);
+	
+		for(int i = 0; i < arrayForY.length; i++) {
+			System.out.println(arrayForY[i].getY());
+		}
+		
+		count = 0;
+		
+		//window 내부의 최단 거리를 구함
+		tmpDistance = new double[arrayForY.length * arrayForY.length];
+		
+		for(int one = 0; one < arrayForY.length-1; one++) {
+			for(int two = one + 1; two < arrayForY.length; two++) {
+				tmpDistance[count++] = Math.sqrt(Math.pow((arrayForY[one].getX() - arrayForY[two].getX()), 2) 
+						+ Math.pow((arrayForY[one].getY() - arrayForY[two].getY()), 2));
+			}
+		}
+		
+		realDistance = Arrays.copyOfRange(tmpDistance, 0, count);
+		
+		for(int i = 1; i < realDistance.length; i++) {
+			if(tmpDistance[i] < min) {
+				min = tmpDistance[i];
+			}
+		}
+		
+		return min;
 	}
 
 	//두 점 중 더 작은 값을 구하는 함수
@@ -115,6 +165,24 @@ public class Closest {
 				}
 			}
 		}	
+	}
+	
+	private static void ySort(Point[] arrayForY) {
+		//두번째부터 시작
+		for(int cur = 1; cur < arrayForY.length; cur++) {
+			Point curKey = arrayForY[cur];
+
+			//현재 cur의 원소 이전 원소를 전부 돌면서 적절한 위치를 찾음
+			for(int pre = cur-1; pre >= 0; pre--) {
+
+				//cur의 원소보다 pre의 원소가 큰 경우 위치 변경
+				if(arrayForY[pre].getY() > curKey.getY()) {
+					arrayForY[pre+1] = arrayForY[pre];
+					arrayForY[pre] = curKey;
+				}
+			}
+		}	
+		
 	}
 
 }

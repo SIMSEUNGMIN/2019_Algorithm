@@ -24,3 +24,30 @@ public class Closest {
 	}
 
 }
+
+class Point{
+	private float x;
+	private float y;
+	
+	public Point(float newX, float newY) {
+		this.x = newX;
+		this.y = newY;
+	}
+	
+	public void setX(float givenX) {
+		this.x = givenX;
+	}
+	
+	public void setY(float givenY) {
+		this.y = givenY;
+	}
+	
+	public float getX() {
+		return this.x;
+	}
+	
+	public float getY() {
+		return this.y;
+	}
+}
+

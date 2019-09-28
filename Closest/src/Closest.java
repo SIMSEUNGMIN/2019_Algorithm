@@ -1,6 +1,8 @@
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Closest {
 
@@ -21,6 +23,14 @@ public class Closest {
 		//읽어온 값으로 배열을 만듦(\n기준)
 		String[] inputArray = input.split("\n");
 		
+		//포인터를 저장할 List선언
+		List<Point> array = new LinkedList<>();
+		
+		//좌표값이 들어간 array
+		for(int i = 0; i < inputArray.length; i++) {
+			String[] tmp = inputArray[i].split(",");
+			array.add(new Point(Float.parseFloat(tmp[0]), Float.parseFloat(tmp[1])));
+		}
 	}
 
 }

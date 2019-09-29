@@ -1,7 +1,11 @@
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class Closest {
 	
@@ -21,160 +25,120 @@ public class Closest {
 			input = new String(readByte);
 		}
 		
-		//ÀĞ¾î¿Â °ªÀ¸·Î ¹è¿­À» ¸¸µê(\n±âÁØ)
+		//ì½ì–´ì˜¨ ê°’ìœ¼ë¡œ ë°°ì—´ì„ ë§Œë“¦(\nê¸°ì¤€)
 		String[] inputArray = input.split("\n");
 		
-		//Æ÷ÀÎÆ®µéÀ» ÀúÀåÇÒ Æ÷ÀÎÆ®ÀÇ ¹è¿­ ¼±¾ğ
-		Point[] array = new Point[inputArray.length];
+		//í¬ì¸íŠ¸ë“¤ì„ ì €ì¥í•  í¬ì¸íŠ¸ì˜ ë°°ì—´ ì„ ì–¸
+		List<Point> array = new ArrayList<>();
 		
-		//ÁÂÇ¥°ªÀÌ µé¾î°£ array
+		//ì¢Œí‘œê°’ì´ ë“¤ì–´ê°„ array
 		for(int i = 0; i < inputArray.length; i++) {
 			String[] tmp = inputArray[i].split(",");
-			array[i] = new Point(Double.parseDouble(tmp[0]), Double.parseDouble(tmp[1]));
+			array.add(new Point(Double.parseDouble(tmp[0]), Double.parseDouble(tmp[1])));
 		}
 		
-		//XÁÂÇ¥ ±âÁØÀ¸·Î ¿À¸§Â÷¼ø Á¤·Ä
-		xSort(array);
+		//Xì¢Œí‘œ ê¸°ì¤€ìœ¼ë¡œ ì˜¤ë¦„ì°¨ìˆœ ì •ë ¬
+		Collections.sort(array, new PointComparatorX());
 		
-		//Á¤·ÄµÈ array·Î Closest_pair±¸ÇÑ °á°ú Ãâ·Â
-		System.out.printf("°á°ú : %.3f",closestPair(array));
+		//ì •ë ¬ëœ arrayë¡œ Closest_pairêµ¬í•œ ê²°ê³¼ ì¶œë ¥
+		System.out.printf("ê²°ê³¼ : %.3f",closestPair(array, 0, array.size()));
 	}
 
-	private static double closestPair(Point[] array) {
+	private static double closestPair(List<Point> array, int start, int end) {
 		
-		Point[] tmpArray = new Point[array.length];
-		Point[] arrayForY;
-		double[] tmpDistance;
-		double[] realDistance;
+		List<Point> tmpArray = new ArrayList<>();
 		
-		int count = 0;
 		
-		if(array.length <= 3) {
-			
-			switch(array.length) {
-				case 2:
-					//µÎ Á¡ »çÀÌ°¡ °¡Àå ÃÖ¼Ú°ª
-					min = Math.sqrt(Math.pow((array[0].getX() - array[1].getX()), 2) 
-							+ Math.pow((array[0].getY() - array[1].getY()), 2));
-					
-					return min;
-				case 3:
-					tmpDistance = new double[array.length];
-					
-					//Á¡µé »çÀÌÀÇ °Å¸®
-					//0¹ø Â° °ª°ú 1¹ø ¤Š °ª
-					tmpDistance[0] = Math.sqrt(Math.pow((array[0].getX() - array[1].getX()), 2) 
-							+ Math.pow((array[0].getY() - array[1].getY()), 2));
-					//1¹ø Â° °ª°ú 2¹ø Â° °ª
-					tmpDistance[1] = Math.sqrt(Math.pow((array[1].getX() - array[2].getX()), 2) 
-							+ Math.pow((array[1].getY() - array[2].getY()), 2));
-					//2¹ø Â° °ª°ú 0¹ø ¤Š °ª
-					tmpDistance[2] = Math.sqrt(Math.pow((array[2].getX() - array[0].getX()), 2) 
-							+ Math.pow((array[2].getY() - array[0].getY()), 2));
-					
-					//°Å¸®µé Áß ÃÖ¼Ú°ªÀ» ±¸ÇØ¼­ return
-					min = tmpDistance[0];
-					
-					for(int i = 1; i < tmpDistance.length; i++) {
-						if(tmpDistance[i] < min) {
-							min = tmpDistance[i];
-						}
+		switch(end-start) {
+		case 2:
+			//ë‘ ì  ì‚¬ì´ê°€ ê°€ì¥ ìµœì†Ÿê°’
+			return distance(array.get(start), array.get(start+1));
+		case 3:
+			double[] tmpDistance = new double[3];
+
+			//ì ë“¤ ì‚¬ì´ì˜ ê±°ë¦¬
+			//0ë²ˆ ì§¸ ê°’ê³¼ 1ë²ˆ ì§¸ ê°’
+			tmpDistance[0] = distance(array.get(start), array.get(start+1));
+			//1ë²ˆ ì§¸ ê°’ê³¼ 2ë²ˆ ì§¸ ê°’
+			tmpDistance[1] = distance(array.get(start+1), array.get(start+2));
+			//2ë²ˆ ì§¸ ê°’ê³¼ 0ë²ˆ ì§¸ÂŠ ê°’
+			tmpDistance[2] = distance(array.get(start), array.get(start+2));
+
+			//ê±°ë¦¬ë¥¼ ì˜¤ë¦„ì°¨ìˆœìœ¼ë¡œ ì •ë ¬
+			Arrays.sort(tmpDistance);
+			return tmpDistance[0];
+		}
+		
+		//ì ì˜ ê°œìˆ˜ê°€ 4ê°œ ì´ìƒì¼ ë•Œ
+		//ë°°ì—´ì„ ë°˜ìœ¼ë¡œ ìª¼ê°œì„œ ì™¼ìª½ê³¼ ì˜¤ë¥¸ìª½ìœ¼ë¡œ ë‚˜ëˆˆ ë’¤
+		//ì™¼ìª½ê³¼ ì˜¤ë¥¸ìª½ì—ì„œ ê°ê° ë‚˜ì˜¨ ìµœì†Ÿê°’ ì¤‘ì—ì„œ ë” ì‘ì€ ê°’ì„ ë°˜í™˜í•¨
+		int mid = (start + end) /2;
+		double min = Math.min(closestPair(array, start, mid), closestPair(array, mid, end));
+
+		//êµ¬í•˜ê³  ë‚˜ì„œ ìµœì†Ÿê°’ë³´ë‹¤ ì‘ì€ ì ë“¤ì„ ë°°ì—´ì—ì„œ ì œì™¸
+		for(int i = start; i < end; i++) {
+			double window = array.get(mid).getX() - array.get(i).getX();
+			if((window * window) < (min * min)) {
+				tmpArray.add(array.get(i));
+			}
+		}
+		
+		//Y ì˜¤ë¦„ì°¨ìˆœ ê¸°ì¤€ sorting
+		Collections.sort(tmpArray, new PointComparatorY());
+
+		//window ë‚´ë¶€ì˜ ìµœë‹¨ ê±°ë¦¬ë¥¼ êµ¬í•¨
+		for(int one = 0; one < tmpArray.size()-1; one++) {
+			for(int two = one + 1; two < tmpArray.size(); two++) {
+				double tmp = tmpArray.get(two).getY() - tmpArray.get(one).getY();
+
+				if((tmp*tmp) < (min*min)) {
+					double tmpD = distance(tmpArray.get(one), tmpArray.get(two));
+					if(tmpD < min) {
+						min = tmpD;
 					}
-					return min;
-				default:
-					return min;
+				}
+				else {
+					break;
+				}
 			}
 		}
-		//Á¡ÀÇ °³¼ö°¡ 4°³ ÀÌ»óÀÏ ¶§
-		else {
-			//¹è¿­À» ¹İÀ¸·Î ÂÉ°³¼­ ¿ŞÂÊ°ú ¿À¸¥ÂÊÀ¸·Î ³ª´« µÚ
-			//¿ŞÂÊ°ú ¿À¸¥ÂÊ¿¡¼­ °¢°¢ ³ª¿Â ÃÖ¼Ú°ª Áß¿¡¼­ ´õ ÀÛÀº °ªÀ» ¹İÈ¯ÇÔ
-			Point[] left = Arrays.copyOfRange(array, 0, array.length/2);
-			Point[] right = Arrays.copyOfRange(array, array.length/2, array.length);
-			min = min(closestPair(left), closestPair(right));
-		}
-		
-		count = 0;
-		
-		//±¸ÇÏ°í ³ª¼­ ÃÖ¼Ú°ªº¸´Ù ÀÛÀº Á¡µéÀ» ¹è¿­¿¡¼­ Á¦¿Ü
-		for(int i = 0; i < array.length; i++) {
-			if((array.length/2 - min) < array[i].getX()) {
-				tmpArray[count++] = array[i];
-			}
-		}
-		
-		arrayForY = Arrays.copyOfRange(tmpArray, 0, count);
-		
-		//arrayForY¸¸ °¡Áö°í sorting
-		ySort(arrayForY);
-	
-		count = 0;
-		
-		//window ³»ºÎÀÇ ÃÖ´Ü °Å¸®¸¦ ±¸ÇÔ
-		tmpDistance = new double[arrayForY.length * arrayForY.length];
-		
-		for(int one = 0; one < arrayForY.length-1; one++) {
-			for(int two = one + 1; two < arrayForY.length; two++) {
-				tmpDistance[count++] = Math.sqrt(Math.pow((arrayForY[one].getX() - arrayForY[two].getX()), 2) 
-						+ Math.pow((arrayForY[one].getY() - arrayForY[two].getY()), 2));
-			}
-		}
-		
-		realDistance = Arrays.copyOfRange(tmpDistance, 0, count);
-		
-		for(int i = 1; i < realDistance.length; i++) {
-			if(tmpDistance[i] < min) {
-				min = tmpDistance[i];
-			}
-		}
-		
+
 		return min;
 	}
-
-	//µÎ Á¡ Áß ´õ ÀÛÀº °ªÀ» ±¸ÇÏ´Â ÇÔ¼ö
-	private static double min(double left, double right) {
-		if(left <= right) {
-			return left;
-		}
-		
-		return right;
-	}
-
-	private static void xSort(Point[] array) {
-		//µÎ¹øÂ°ºÎÅÍ ½ÃÀÛ
-		for(int cur = 1; cur < array.length; cur++) {
-			Point curKey = array[cur];
-			
-			//ÇöÀç curÀÇ ¿ø¼Ò ÀÌÀü ¿ø¼Ò¸¦ ÀüºÎ µ¹¸é¼­ ÀûÀıÇÑ À§Ä¡¸¦ Ã£À½
-			for(int pre = cur-1; pre >= 0; pre--) {
-				
-				//curÀÇ ¿ø¼Òº¸´Ù preÀÇ ¿ø¼Ò°¡ Å« °æ¿ì À§Ä¡ º¯°æ
-				if(array[pre].getX() > curKey.getX()) {
-					array[pre+1] = array[pre];
-					array[pre] = curKey;
-				}
-			}
-		}	
-	}
 	
-	private static void ySort(Point[] arrayForY) {
-		//µÎ¹øÂ°ºÎÅÍ ½ÃÀÛ
-		for(int cur = 1; cur < arrayForY.length; cur++) {
-			Point curKey = arrayForY[cur];
-
-			//ÇöÀç curÀÇ ¿ø¼Ò ÀÌÀü ¿ø¼Ò¸¦ ÀüºÎ µ¹¸é¼­ ÀûÀıÇÑ À§Ä¡¸¦ Ã£À½
-			for(int pre = cur-1; pre >= 0; pre--) {
-
-				//curÀÇ ¿ø¼Òº¸´Ù preÀÇ ¿ø¼Ò°¡ Å« °æ¿ì À§Ä¡ º¯°æ
-				if(arrayForY[pre].getY() > curKey.getY()) {
-					arrayForY[pre+1] = arrayForY[pre];
-					arrayForY[pre] = curKey;
-				}
-			}
-		}	
+	private static double distance(Point left, Point right) {
+		double XValue = left.getX() - right.getX();
+		double YValue = left.getY() - right.getY();
 		
+		return Math.sqrt((XValue * XValue) + (YValue * YValue));
 	}
+}
 
+class PointComparatorX implements Comparator<Point>{
+	
+	@Override
+	public int compare(Point left, Point right) {
+		// Xì— ëŒ€í•´ì„œ ì˜¤ë¦„ ì°¨ìˆœ
+		if(left.getX() > right.getY()) {
+			return 1;
+		}
+		else if(left.getX() == right.getX()){
+			return (int)(left.getY() - right.getY());
+		}
+		return -1;
+	}
+}
+
+class PointComparatorY implements Comparator<Point>{
+	
+	@Override
+	public int compare(Point left, Point right) {
+		// Yì— ëŒ€í•´ì„œ ì˜¤ë¦„ ì°¨ìˆœ
+		if(left.getY() >= right.getY()) {
+			return 1;
+		}
+		return -1;
+	}
 }
 
 class Point{

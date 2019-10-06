@@ -2,12 +2,18 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class MaxPriorityQueue {
-
+	static Scanner scanner = new Scanner(System.in);
+	
 	public static void main(String[] args) throws FileNotFoundException, IOException {
-		// TODO Auto-generated method stub
+		
+		//원소를 담을 arrayList
 		ArrayList<HeapNode> heap = new ArrayList<>();
+		
+		//메뉴에 대한 번호
+		int select = 0;
 		
 		String input = "";
 		
@@ -37,9 +43,140 @@ public class MaxPriorityQueue {
 		//입력값에 의해 생성된 heap 배열을 MaxHeap으로 만듦
 		buildMaxHeap(heap);
 		
-		for(int i = 1; i < heap.size(); i++) {
-			System.out.println("번호 : " + heap.get(i).getNumber() + " 번호 : " + heap.get(i).getName());
+		//현재 힢의 모습을 출력
+		showHeap(heap);
+		
+		//메뉴 보여주기
+		showMenu();
+		select = scanner.nextInt();
+		
+		while(select != 6) {
+			
+			switch(select) {
+			case 1: //insert
+				insert(heap);
+				break;
+			case 2: //max
+				printMax(heap);
+				break;
+			case 3: //extract_max
+				extractMax(heap);
+				break;
+			case 4: //increase_key
+				increaseKey(heap);
+				break;
+			case 5: //delete
+				delete(heap);
+				break;
+			default:
+				break;
+			}
+			
+			showHeap(heap);
+			showMenu();
+			select = scanner.nextInt();
 		}
+		
+		
+	}
+
+	private static void insert(ArrayList<HeapNode> heap) {
+		System.out.print("새로 추가할 값을 입력하시오 : ");
+		int newNumber = scanner.nextInt();
+		scanner.nextLine();
+		System.out.print("새로 추가할 값의 이름을 입력하시오 : ");
+		String newName = scanner.nextLine();
+		
+		HeapNode newNode = new HeapNode(newNumber, newName);
+		
+		//가장 마지막에 새로운 노드를 삽입
+		heap.add(newNode);
+		
+		//현재 노드의 index
+		int cur = heap.size()-1;
+		
+		//부모노드가 0이 아니고 현재 노드가 부모노드보다 클 경우
+		//서로의 위치를 바꾼 다음
+		//바꾼 위치와 바꾼 위치에서의 부모를 비교
+		//크지 않을 때까지 위의 과정 반복
+		while(cur/2 != 0 &&
+				heap.get(cur).getNumber() > heap.get(cur/2).getNumber()) {
+			HeapNode tmp = heap.get(cur/2);
+			heap.set(cur/2, heap.get(cur));
+			heap.set(cur, tmp);
+			
+			cur = cur/2;
+		}
+		
+	}
+
+	private static void printMax(ArrayList<HeapNode> heap) {
+		//힢에서 제일 최대값을 출력(삭제 x)
+		//index 0번은 사용하지 않음
+		System.out.println("번호 : " + heap.get(1).getNumber() + ", 이름 : " + heap.get(1).getName());
+	}
+	
+	private static void extractMax(ArrayList<HeapNode> heap) {
+		//root노드를 꺼낸 다음 맨 마지막에 있는 노드를 루트 노드로 옮김
+		//그리고 루트를 기준으로 maxHeapify수행
+		System.out.println("추출한 노드 - " + heap.get(1).getNumber() + "\t" + heap.get(1).getName());
+		
+		//루트로 가장 마지막 노드 이동
+		heap.set(1, heap.get(heap.size()-1));
+		//맨 마지막에 있는 노드 삭제
+		heap.remove(heap.size()-1);
+		
+		//루트를 기준으로 maxHeapify수행
+		maxHeapify(heap, 1);
+	}
+	
+	private static void increaseKey(ArrayList<HeapNode> heap) {
+		System.out.print("값을 바꾸기 원하는 index의 번호를 입력하시오 : ");
+		int index = scanner.nextInt();
+		scanner.nextLine();
+		
+		System.out.println("현재 키 값: " + heap.get(index).getNumber() + "\t" + heap.get(index).getName());
+		
+		System.out.print("변경할 키의 값을 입력하시오(변경 전 키값보다는 커야한다) : ");
+		int value = scanner.nextInt();
+		scanner.nextLine();
+		
+		//해당하는 index의 키 값을 변경
+		heap.get(index).setNumber(value);
+		
+		System.out.println("변경된 키 값 : " + heap.get(index).getNumber() + "\t" + heap.get(index).getName());
+		
+		//값이 변경되었기 때문에 원래 자리를 찾아줘야 함
+		//현재 노드의 index
+		int cur = index;
+
+		//부모노드가 0이 아니고 현재 노드가 부모노드보다 클 경우
+		//서로의 위치를 바꾼 다음
+		//바꾼 위치와 바꾼 위치에서의 부모를 비교
+		//크지 않을 때까지 위의 과정 반복
+		while(cur/2 != 0 &&
+				heap.get(cur).getNumber() > heap.get(cur/2).getNumber()) {
+			HeapNode tmp = heap.get(cur/2);
+			heap.set(cur/2, heap.get(cur));
+			heap.set(cur, tmp);
+
+			cur = cur/2;
+		}
+	}
+	
+	private static void delete(ArrayList<HeapNode> heap) {
+		System.out.print("삭제할 노드의 index값을 입력하시오 : ");
+		int index = scanner.nextInt();
+		scanner.nextLine();
+		
+		System.out.println("삭제할 키 값 : " + heap.get(index).getNumber() + "\t" + heap.get(index).getName());
+		
+		//삭제할 index위치에 마지막 노드를 넣음
+		heap.set(index, heap.get(heap.size()-1));
+		heap.remove(heap.size()-1);
+		
+		//값을 삭제한 index를 기준으로 maxHeapify실행
+		maxHeapify(heap, index);
 		
 	}
 
@@ -105,7 +242,22 @@ public class MaxPriorityQueue {
 		}
 		
 	}
+	
+	private static void showHeap(ArrayList<HeapNode> heap) {
+		System.out.println("**********현재 우선 순위 큐에 저장된 작업 대기 목록은 다음과 같습니다.**********");
 
+		for(int i = 1; i < heap.size(); i++)
+			System.out.println(heap.get(i).getNumber() + "\t" + heap.get(i).getName());
+	}
+	
+	private static void showMenu() {
+		System.out.println("----------------------------------------------------");
+		System.out.println("1. 작업 추가\t 2. 최대값\t 3. 최대 우선순위 작업 처리\n"
+				+ "4. 원소 키값 증가\t 5. 작업 제거\t 6. 종료");
+		System.out.println("----------------------------------------------------");
+		System.out.print("원하시는 작업을 선택하시오. : ");	
+	}
+	
 }
 
 class HeapNode {

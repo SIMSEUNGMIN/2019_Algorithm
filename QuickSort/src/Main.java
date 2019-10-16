@@ -129,7 +129,8 @@ public class Main {
 				array[j] = tmp;
 			}
 		}
-		//j index가 x보다 클경우 끝 값을 바꿔야 함
+		
+		//마지막에 i를 늘리고 마지막 i의 값과 현재 기준값을 바꾼다.
 		i++;
 		String tmp = array[i];
 		array[i] = array[end];
